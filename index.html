@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K.G.Audio Lab - Professional Audio Development</title>
+    <meta name="description" content="K.G.Audio Lab - Cutting-edge audio development tools and libraries">
+    <link rel="icon" type="image/png" href="./kgstudio/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="./kgstudio/favicon.svg">
+    <link rel="shortcut icon" href="./kgstudio/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            font-feature-settings: 'kern' 1, 'liga' 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .waveform-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .wave-bar {
+            position: absolute;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to top, #4a90e2, #7b68ee, #ff6b6b);
+            animation: waveform 1.5s ease-in-out infinite;
+            border-radius: 2px;
+        }
+
+        @keyframes waveform {
+            0%, 100% { height: 20px; }
+            50% { height: 80px; }
+        }
+
+        .floating-notes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .note {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.1);
+            animation: float 8s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(75, 144, 226, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 300;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #4a90e2, #7b68ee, #ff6b6b);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.01em;
+            line-height: 1.4;
+            color: #cccccc;
+            margin-bottom: 50px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .projects {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 100px 0;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .projects-title {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 300;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .project-card:hover::before {
+            left: 100%;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(75, 144, 226, 0.2);
+            border-color: rgba(75, 144, 226, 0.5);
+        }
+
+        .project-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover .project-icon {
+            transform: scale(1.1);
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            font-weight: 400;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .project-description {
+            font-size: 1rem;
+            font-weight: 300;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: 0;
+            line-height: 1.6;
+            color: #cccccc;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        .project-link {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 0.95rem;
+            font-weight: 400;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: 0.01em;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .project-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .external-link {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .external-link:hover {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+                letter-spacing: -0.01em;
+            }
+            .hero-subtitle {
+                font-size: 1.2rem;
+                letter-spacing: 0;
+            }
+            .projects-title {
+                font-size: 2.2rem;
+                letter-spacing: -0.01em;
+            }
+            .project-title {
+                font-size: 1.5rem;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .project-card {
+                padding: 30px 20px;
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid #4a90e2;
+            border-bottom: 2px solid #4a90e2;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="waveform-bg"></div>
+    <div class="floating-notes"></div>
+
+    <main class="container">
+        <section class="hero">
+            <img src="./kgstudio/logo-kgaudiolab.png" alt="K.G.Audio Lab" class="hero-logo">
+            <h1 class="hero-title">K.G.Audio Lab</h1>
+            <p class="hero-subtitle">Music Development Tools & Libraries</p>
+            <div class="scroll-indicator">
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <section class="projects">
+            <div class="container">
+                <h2 class="projects-title">Our Projects</h2>
+                <div class="projects-grid">
+                    <a href="./kgstudio/" class="project-card">
+                        <img src="./kgstudio/logo.png" alt="K.G.Studio" class="project-icon">
+                        <h3 class="project-title">K.G.Studio</h3>
+                        <p class="project-description">
+                            A powerful browser-based Digital Audio Workstation (DAW) featuring advanced audio processing, 
+                            multi-track editing, and professional-grade effects. Create, edit, and produce music directly in your browser.
+                        </p>
+                        <span class="project-link">Launch Studio</span>
+                    </a>
+
+                    <a href="https://github.com/KGAudioLab/soundfont-for-samplers" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="project-card">
+                        <img src="./kgstudio/logo-kgaudiolab.png" alt="Soundfont for Samplers" class="project-icon">
+                        <h3 class="project-title">Soundfont for Samplers</h3>
+                        <p class="project-description">
+                            High-quality soundfont library optimized for samplers and virtual instruments. 
+                            Professional-grade samples and presets for electronic music production and sound design.
+                        </p>
+                        <span class="project-link external-link">View on GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function createWaveform() {
+            const waveformBg = document.querySelector('.waveform-bg');
+            const numberOfBars = 100;
+            
+            for (let i = 0; i < numberOfBars; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'wave-bar';
+                bar.style.left = `${(i / numberOfBars) * 100}%`;
+                bar.style.animationDelay = `${Math.random() * 1.5}s`;
+                bar.style.animationDuration = `${1 + Math.random() * 2}s`;
+                waveformBg.appendChild(bar);
+            }
+        }
+
+        function createFloatingNotes() {
+            const notesContainer = document.querySelector('.floating-notes');
+            const musicSymbols = ['♪', '♫', '♬', '♭', '♯', '𝄞'];
+            
+            function addNote() {
+                const note = document.createElement('div');
+                note.className = 'note';
+                note.textContent = musicSymbols[Math.floor(Math.random() * musicSymbols.length)];
+                note.style.left = Math.random() * 100 + '%';
+                note.style.animationDuration = (5 + Math.random() * 6) + 's';
+                note.style.fontSize = (16 + Math.random() * 20) + 'px';
+                notesContainer.appendChild(note);
+                
+                setTimeout(() => {
+                    if (note.parentNode) {
+                        note.parentNode.removeChild(note);
+                    }
+                }, 11000);
+            }
+
+            setInterval(addNote, 800);
+        }
+
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        function observeProjectCards() {
+            const cards = document.querySelectorAll('.project-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 200);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        }
+
+        function smoothScroll() {
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            scrollIndicator.addEventListener('click', () => {
+                document.querySelector('.projects').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createWaveform();
+            createFloatingNotes();
+            observeProjectCards();
+            smoothScroll();
+            
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            const hero = document.querySelector('.hero');
+            const translateX = (mouseX - 0.5) * 20;
+            const translateY = (mouseY - 0.5) * 20;
+            
+            hero.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        });
+    </script>
+</body>
+</html>
