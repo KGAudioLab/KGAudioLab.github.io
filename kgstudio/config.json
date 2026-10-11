@@ -1,7 +1,10 @@
 {
     "general": {
+        "aire": {
+            "base_url": "https://huggingface.co/KGAudioLab/instrument-aire-models/resolve/main/models/"
+        },
         "language": "auto",
-        "agent_mode": "regular",
+        "agent_mode": "advanced",
         "llm_provider": "local_browser",
         "persist_api_keys_non_localhost": false,
         "auto_compact_threshold_percent": 90,
@@ -38,10 +41,6 @@
         },
         "soundfont": {
             "base_url": "https://cdn.jsdelivr.net/npm/soundfont-for-samplers/FluidR3_GM/"
-        },
-        "kgone": {
-            "enabled": false,
-            "base_url": "http://127.0.0.1:8000"
         }
     },
     "hotkeys": {
