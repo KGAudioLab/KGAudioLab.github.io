@@ -1,0 +1,181 @@
+{
+  "audio": {
+    "mp3_kbps": 320,
+    "mp3_dither": true,
+    "reverb": {
+      "impulse_response": "reverb/hall.wav",
+      "wet": 0.3,
+      "tail_seconds": 2.986645833333333
+    }
+  },
+  "midi": {
+    "min_cropped_note_seconds": 0.03,
+    "feature_time_cap_seconds": 8
+  },
+  "runtime": {
+    "max_auto_threads": 4
+  },
+  "piano_roll": {
+    "zoom": 80,
+    "min_zoom": 20,
+    "max_zoom": 300
+  },
+  "models": [
+    {
+      "name": "Violin",
+      "model": "m01-violin-onnx-v1",
+      "instrument": "string_violin",
+      "show_in_menu": true,
+      "demo_midi": "violin-demo-01-short.mid",
+      "default": {
+        "range": [
+          55,
+          100
+        ],
+        "keyswitches": [
+          36,
+          37,
+          38
+        ],
+        "legacy_sustain_keyswitches": [
+          39
+        ],
+        "pitch_map": null,
+        "pre_roll_beats": 1,
+        "use_velocity": "auto",
+        "seed": 0,
+        "tail": 3,
+        "pitch_expression": 1,
+        "transpose": 0,
+        "steps_f0": 16,
+        "steps_ac": 16,
+        "cfg_f0": 2,
+        "cfg_ac": 2,
+        "window_seconds": 8,
+        "known_prefix_seconds": 2,
+        "vocoder_chunk_seconds": 30,
+        "vocoder_context_seconds": 1,
+        "format": "mp3",
+        "device": "auto",
+        "threads": 0
+      }
+    },
+    {
+      "name": "Viola",
+      "model": "m01-viola-onnx-v1",
+      "instrument": "string_viola",
+      "show_in_menu": true,
+      "demo_midi": "viola-demo-01-short.mid",
+      "default": {
+        "range": [
+          48,
+          93
+        ],
+        "keyswitches": [
+          36,
+          37,
+          38
+        ],
+        "legacy_sustain_keyswitches": [
+          39
+        ],
+        "pitch_map": null,
+        "pre_roll_beats": 1,
+        "use_velocity": "auto",
+        "seed": 0,
+        "tail": 3,
+        "pitch_expression": 1,
+        "transpose": 0,
+        "steps_f0": 16,
+        "steps_ac": 16,
+        "cfg_f0": 2,
+        "cfg_ac": 2,
+        "window_seconds": 8,
+        "known_prefix_seconds": 2,
+        "vocoder_chunk_seconds": 30,
+        "vocoder_context_seconds": 1,
+        "format": "mp3",
+        "device": "auto",
+        "threads": 0
+      }
+    },
+    {
+      "name": "Cello",
+      "model": "m01-cello-onnx-v1",
+      "instrument": "string_cello",
+      "show_in_menu": true,
+      "demo_midi": "cello-demo-01-short.mid",
+      "default": {
+        "range": [
+          36,
+          81
+        ],
+        "keyswitches": [
+          24,
+          25,
+          26
+        ],
+        "legacy_sustain_keyswitches": [
+          27
+        ],
+        "pitch_map": null,
+        "pre_roll_beats": 1,
+        "use_velocity": "auto",
+        "seed": 0,
+        "tail": 3,
+        "pitch_expression": 1,
+        "transpose": 0,
+        "steps_f0": 16,
+        "steps_ac": 16,
+        "cfg_f0": 2,
+        "cfg_ac": 2,
+        "window_seconds": 8,
+        "known_prefix_seconds": 2,
+        "vocoder_chunk_seconds": 30,
+        "vocoder_context_seconds": 1,
+        "format": "mp3",
+        "device": "auto",
+        "threads": 0
+      }
+    },
+    {
+      "name": "Double bass",
+      "model": "m01-double-bass-onnx-v1",
+      "instrument": "string_double_bass",
+      "show_in_menu": false,
+      "demo_midi": null,
+      "default": {
+        "range": [
+          24,
+          69
+        ],
+        "keyswitches": [
+          12,
+          13,
+          14
+        ],
+        "legacy_sustain_keyswitches": [
+          15
+        ],
+        "pitch_map": null,
+        "pre_roll_beats": 1,
+        "use_velocity": "auto",
+        "seed": 0,
+        "tail": 3,
+        "pitch_expression": 1,
+        "transpose": 0,
+        "steps_f0": 16,
+        "steps_ac": 16,
+        "cfg_f0": 2,
+        "cfg_ac": 2,
+        "window_seconds": 8,
+        "known_prefix_seconds": 2,
+        "vocoder_chunk_seconds": 3,
+        "vocoder_context_seconds": 1,
+        "format": "mp3",
+        "device": "auto",
+        "threads": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+.DS_Store
+
+# Local Express preview server and its dependencies.
+/local-server/
+
+# Local VS Code debug configuration.
+/.vscode/launch.json
+
+# Vite's checkout-local dependency cache.
+/node_modules/

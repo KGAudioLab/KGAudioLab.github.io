@@ -1,496 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K.G.Audio Lab - Music Development Tools & Libraries</title>
-    <meta name="description" content="K.G.Audio Lab - Cutting-edge audio development tools and libraries">
-    <link rel="icon" type="image/png" href="./kgstudio/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/svg+xml" href="./kgstudio/favicon.svg">
-    <link rel="shortcut icon" href="./kgstudio/favicon.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-            color: #ffffff;
-            overflow-x: hidden;
-            min-height: 100vh;
-            font-feature-settings: 'kern' 1, 'liga' 1;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .waveform-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.1;
-        }
-
-        .wave-bar {
-            position: absolute;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(to top, #4a90e2, #7b68ee, #ff6b6b);
-            animation: waveform 1.5s ease-in-out infinite;
-            border-radius: 2px;
-        }
-
-        @keyframes waveform {
-            0%, 100% { height: 20px; }
-            50% { height: 80px; }
-        }
-
-        .floating-notes {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .note {
-            position: absolute;
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.1);
-            animation: float 8s linear infinite;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero-logo {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 30px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(75, 144, 226, 0.3);
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .hero-title {
-            font-size: 4rem;
-            font-weight: 300;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #4a90e2, #7b68ee, #ff6b6b);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient-shift 3s ease infinite;
-        }
-
-        @keyframes gradient-shift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            font-weight: 300;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            letter-spacing: -0.01em;
-            line-height: 1.4;
-            color: #cccccc;
-            margin-bottom: 50px;
-            opacity: 0;
-            animation: fadeInUp 1s ease 0.5s forwards;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .projects {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 100px 0;
-            background: rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        .projects-title {
-            text-align: center;
-            font-size: 3rem;
-            font-weight: 300;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
-            margin-bottom: 60px;
-            color: #ffffff;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-
-        .project-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .project-card:hover::before {
-            left: 100%;
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(75, 144, 226, 0.2);
-            border-color: rgba(75, 144, 226, 0.5);
-        }
-
-        .project-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            border-radius: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .project-card:hover .project-icon {
-            transform: scale(1.1);
-        }
-
-        .project-title {
-            font-size: 1.8rem;
-            font-weight: 400;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            letter-spacing: -0.01em;
-            line-height: 1.3;
-            margin-bottom: 15px;
-            color: #ffffff;
-        }
-
-        .project-description {
-            font-size: 1rem;
-            font-weight: 300;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            letter-spacing: 0;
-            line-height: 1.6;
-            color: #cccccc;
-            margin-bottom: 25px;
-            flex-grow: 1;
-        }
-
-        .project-link {
-            display: inline-block;
-            padding: 12px 30px;
-            font-size: 0.95rem;
-            font-weight: 400;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            letter-spacing: 0.01em;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            margin-top: auto;
-        }
-
-        .project-link:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .external-link {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .external-link:hover {
-            background: rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-                letter-spacing: -0.01em;
-            }
-            .hero-subtitle {
-                font-size: 1.2rem;
-                letter-spacing: 0;
-            }
-            .projects-title {
-                font-size: 2.2rem;
-                letter-spacing: -0.01em;
-            }
-            .project-title {
-                font-size: 1.5rem;
-            }
-            .projects-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .project-card {
-                padding: 30px 20px;
-            }
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-5px);
-            }
-        }
-
-        .scroll-arrow {
-            width: 24px;
-            height: 24px;
-            border-right: 2px solid #4a90e2;
-            border-bottom: 2px solid #4a90e2;
-            transform: rotate(45deg);
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1e1e1e">
+  <title>KGAudioLab — Ideas into music.</title>
+  <meta name="description" content="Meet K.G.Studio and InstVELA. An independent audio lab building a browser-based music studio and expressive virtual instruments.">
+  <link rel="icon" type="image/png" href="./favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="stylesheet" href="./homepage/style.css">
+  <script type="module" src="./homepage/site.js"></script>
 </head>
 <body>
-    <div class="waveform-bg"></div>
-    <div class="floating-notes"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12"/></symbol>
+    <symbol id="arrow-right" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="arrow-down" viewBox="0 0 24 24"><path d="M12 4v15m-6-6 6 6 6-6"/></symbol>
+    <symbol id="music-note" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="5.5" cy="18.5" rx="3.5" ry="2.5"/><ellipse cx="16.5" cy="16.5" rx="3.5" ry="2.5"/></symbol>
+    <symbol id="pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z"/></symbol>
+  </svg>
 
-    <main class="container">
-        <section class="hero">
-            <img src="./kgstudio/logo-kgaudiolab.png" alt="K.G.Audio Lab" class="hero-logo">
-            <h1 class="hero-title">K.G.Audio Lab</h1>
-            <p class="hero-subtitle">Music Development Tools & Libraries</p>
-            <div class="scroll-indicator">
-                <div class="scroll-arrow"></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#home" aria-label="KGAudioLab, home"><img src="./kgstudio/logo-kgaudiolab.png" width="34" height="34" alt=""><span>KGAudioLab<span class="brand-period">.</span></span></a>
+      <nav class="top-links" aria-label="Main navigation">
+        <a href="https://github.com/KGAudioLab" target="_blank" rel="noopener noreferrer">GitHub<svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+        <a href="https://huggingface.co/KGAudioLab" target="_blank" rel="noopener noreferrer">Hugging Face<svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <nav class="section-nav" aria-label="Page sections">
+    <a href="#home" aria-label="Introduction" aria-current="location"><span class="dot-label">Introduction</span></a>
+    <a href="#studio" aria-label="K.G.Studio"><span class="dot-label">K.G.Studio</span></a>
+    <a href="#instvela" aria-label="InstVELA"><span class="dot-label">InstVELA</span></a>
+    <a href="#about" aria-label="About the lab"><span class="dot-label">The lab</span></a>
+  </nav>
+
+  <main id="main">
+    <section class="page-section hero" id="home" aria-labelledby="hero-title">
+      <div class="container hero-content">
+        <p class="eyebrow"><span class="eyebrow-line"></span>Independent audio software &amp; research</p>
+        <h1 id="hero-title">Ideas into music.<br><span>Make it yours.</span></h1>
+        <p class="hero-description">A studio powered by AI agents. Expressive AI instruments.<br class="desktop-break"> Compose, arrange, and bring your ideas to life — right in your browser.</p>
+        <div class="actions hero-actions">
+          <a class="button button-primary" href="#studio">Explore K.G.Studio<svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg></a>
+          <a class="text-link" href="#instvela">Meet InstVELA<svg class="icon" aria-hidden="true"><use href="#arrow-down"/></svg></a>
+        </div>
+      </div>
+      <div class="container hero-foot">
+        <a class="scroll-cue" href="#studio"><svg class="icon" aria-hidden="true"><use href="#arrow-down"/></svg><span>Explore our projects</span></a>
+        <span class="hero-foot-note"><span class="motto-phrase">Made for the <span class="motto-word motto-browser">browser</span>.</span><span class="motto-separator" aria-hidden="true"></span><span class="motto-phrase">Made for <span class="motto-word motto-music">music</span>.</span><span class="motto-separator" aria-hidden="true"></span><span class="motto-phrase">Made with <span class="motto-word motto-ai">AI</span>.</span><span class="motto-separator" aria-hidden="true"></span><span class="motto-phrase">Made with <span class="motto-word motto-love">love</span>.</span></span>
+      </div>
+    </section>
+
+    <section class="page-section product-section" id="studio" aria-labelledby="studio-title">
+      <div class="container">
+        <div class="product-intro" data-reveal>
+          <div class="product-logo"><img src="./kgstudio/logo.png" width="224" height="224" alt="K.G.Studio logo" decoding="async"></div>
+          <div class="product-copy">
+            <p class="eyebrow">01 <span class="eyebrow-divider">/</span> The studio</p>
+            <h2 id="studio-title">K.G.Studio</h2>
+            <p class="product-tagline">Your ideas deserve a place to play.</p>
+            <p class="product-description">A music studio that lives in your browser. Compose in the piano roll, arrange your tracks, and shape your sound — with an AI music assistant to help you find the next note.</p>
+            <div class="actions">
+              <a class="button button-primary" href="./kgstudio/">Open K.G.Studio<svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+              <a class="text-link" href="https://github.com/KGAudioLab/K.G.Studio" target="_blank" rel="noopener noreferrer">View on GitHub<svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
             </div>
-        </section>
+          </div>
+        </div>
+        <figure class="studio-showcase" data-reveal>
+          <div class="showcase-bar"><span><span class="small-mark"></span>A look inside the studio</span><button class="animation-toggle" type="button" aria-pressed="false" aria-label="Pause studio demo animation"><svg class="icon" aria-hidden="true"><use href="#pause"/></svg><span>Pause demo</span></button></div>
+          <div class="studio-media">
+            <img id="studio-animation" src="./homepage/assets/kgstudio-demo.gif" width="960" height="540" alt="K.G.Studio in action: composing and arranging music in the piano roll with the integrated AI assistant." loading="lazy" decoding="async">
+            <canvas id="studio-still" hidden role="img" aria-label="Paused frame of the K.G.Studio workflow demo"></canvas>
+          </div>
+          <figcaption><span>From a first idea to a full arrangement.</span><span>Compose. Arrange. Explore.</span></figcaption>
+        </figure>
+      </div>
+    </section>
 
-        <section class="projects">
-            <div class="container">
-                <h2 class="projects-title">Our Projects</h2>
-                <div class="projects-grid">
-                    <a href="./kgstudio/" class="project-card">
-                        <img src="./kgstudio/logo.png" alt="K.G.Studio" class="project-icon">
-                        <h3 class="project-title">K.G.Studio</h3>
-                        <p class="project-description">
-                            A lightweight, browser-based Digital Audio Workstation (DAW) with an integrated AI music assistant powered by Large Language Models (LLMs).
-                        </p>
-                        <span class="project-link">Launch Studio</span>
-                    </a>
-
-                    <a href="https://github.com/KGAudioLab/soundfont-for-samplers" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       class="project-card">
-                        <img src="./kgstudio/logo-kgaudiolab.png" alt="Soundfont for Samplers" class="project-icon">
-                        <h3 class="project-title">Soundfont for Samplers</h3>
-                        <p class="project-description">
-                            High-quality soundfont library optimized for online samplers and virtual instruments. 
-                            Easy integration with Tone.js, Web Audio API, and other audio libraries.
-                        </p>
-                        <span class="project-link external-link">View on GitHub</span>
-                    </a>
-                </div>
+    <section class="page-section product-section instvela-section" id="instvela" aria-labelledby="instvela-title">
+      <div class="container">
+        <div class="product-intro" data-reveal>
+          <div class="product-logo instvela-logo"><img src="./instvela/logo.png" width="224" height="224" alt="InstVELA logo" loading="lazy" decoding="async"></div>
+          <div class="product-copy">
+            <p class="eyebrow">02 <span class="eyebrow-divider">/</span> The instrument</p>
+            <div class="product-title-row"><h2 id="instvela-title">InstVELA</h2><span class="release-label">M01Preview</span></div>
+            <p class="product-tagline">Write the notes. Hear a performance.</p>
+            <p class="product-description">Turn MIDI into expressive string audio, with natural pitch movement and evolving dynamics. Discover violin, viola, cello, and double bass — rendered on your own device.</p>
+            <div class="actions">
+              <a class="button button-primary" href="./instvela/">Open InstVELA<svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+              <a class="text-link" href="https://huggingface.co/KGAudioLab/InstVELA-models-onnx" target="_blank" rel="noopener noreferrer">Explore the models<svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
             </div>
-        </section>
-    </main>
+          </div>
+        </div>
+        <div class="playground-intro" data-reveal>
+          <div><p class="eyebrow">A little room to experiment</p><h3>Give the melody your own touch.</h3></div>
+          <p id="piano-instructions">Drag a note up or down. Render the phrase.<br>Hear what a small change can do.</p>
+        </div>
+        <div class="violin-demo" id="violin-demo" data-state="idle" data-reveal>
+          <div class="demo-toolbar">
+            <div class="demo-piece"><svg class="icon" aria-hidden="true"><use href="#music-note"/></svg><div><strong>Violin étude</strong><span id="demo-metadata">The short violin example, ready to make your own.</span></div></div>
+            <span class="local-label"><span></span>On your device</span>
+          </div>
+          <div class="demo-roll-wrap">
+            <div class="demo-legend" aria-label="Note articulations"><span><i class="sustain"></i>Sustain</span><span><i class="spiccato"></i>Spiccato</span><span><i class="pizzicato"></i>Pizzicato</span><span class="pitch-hint">↕ Drag to change pitch</span></div>
+            <div class="demo-roll" id="demo-roll"><div id="demo-spacer"></div><canvas id="demo-canvas" tabindex="0" role="group" aria-label="Editable violin piano roll" aria-describedby="piano-instructions keyboard-instructions"></canvas></div>
+            <p class="sr-only" id="keyboard-instructions">With the piano roll focused, use Left and Right to select a note, and Up and Down to change its pitch.</p>
+          </div>
+          <div class="demo-controls">
+            <div class="demo-status-wrap"><span class="status-light" aria-hidden="true"></span><p id="demo-status" role="status">Loading the violin phrase…</p></div>
+            <button class="button button-primary render-button" id="render-violin" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#play"/></svg><span>Render violin</span></button>
+          </div>
+          <progress class="demo-progress" id="demo-progress" max="1" value="0" aria-label="Violin rendering progress" hidden></progress>
+          <div class="demo-output" id="demo-output" hidden><audio id="demo-audio" controls preload="metadata" aria-label="Your rendered violin performance"></audio><p id="demo-audio-info"></p></div>
+          <noscript><p class="noscript-message">Enable JavaScript to edit and render this phrase, or <a href="./instvela/">open the full InstVELA demo</a>.</p></noscript>
+        </div>
+        <div class="playground-foot"><p>Bring your own MIDI to the full demo.</p><a href="./instvela/" class="text-link">Explore the full demo<svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg></a></div>
+      </div>
+    </section>
 
-    <script>
-        function createWaveform() {
-            const waveformBg = document.querySelector('.waveform-bg');
-            const numberOfBars = 100;
-            
-            for (let i = 0; i < numberOfBars; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'wave-bar';
-                bar.style.left = `${(i / numberOfBars) * 100}%`;
-                bar.style.animationDelay = `${Math.random() * 1.5}s`;
-                bar.style.animationDuration = `${1 + Math.random() * 2}s`;
-                waveformBg.appendChild(bar);
-            }
-        }
-
-        function createFloatingNotes() {
-            const notesContainer = document.querySelector('.floating-notes');
-            const musicSymbols = ['♪', '♫', '♬', '♭', '♯', '𝄞'];
-            
-            function addNote() {
-                const note = document.createElement('div');
-                note.className = 'note';
-                note.textContent = musicSymbols[Math.floor(Math.random() * musicSymbols.length)];
-                note.style.left = Math.random() * 100 + '%';
-                note.style.animationDuration = (5 + Math.random() * 6) + 's';
-                note.style.fontSize = (16 + Math.random() * 20) + 'px';
-                notesContainer.appendChild(note);
-                
-                setTimeout(() => {
-                    if (note.parentNode) {
-                        note.parentNode.removeChild(note);
-                    }
-                }, 11000);
-            }
-
-            setInterval(addNote, 800);
-        }
-
-        function typeWriter(element, text, speed = 100) {
-            let i = 0;
-            element.textContent = '';
-            
-            function type() {
-                if (i < text.length) {
-                    element.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                }
-            }
-            type();
-        }
-
-        function observeProjectCards() {
-            const cards = document.querySelectorAll('.project-card');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateY(0)';
-                        }, index * 200);
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-
-            cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(50px)';
-                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(card);
-            });
-        }
-
-        function smoothScroll() {
-            const scrollIndicator = document.querySelector('.scroll-indicator');
-            scrollIndicator.addEventListener('click', () => {
-                document.querySelector('.projects').scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            createWaveform();
-            createFloatingNotes();
-            observeProjectCards();
-            smoothScroll();
-            
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
-            
-            const hero = document.querySelector('.hero');
-            const translateX = (mouseX - 0.5) * 20;
-            const translateY = (mouseY - 0.5) * 20;
-            
-            hero.style.transform = `translate(${translateX}px, ${translateY}px)`;
-        });
-    </script>
+    <section class="page-section about-section" id="about" aria-labelledby="about-title">
+      <div class="container about-content">
+        <div class="about-heading" data-reveal><p class="eyebrow">A note from the lab</p><h2 id="about-title">Driven by curiosity.<br>Grounded in music.</h2></div>
+        <div class="about-copy" data-reveal>
+          <p>KGAudioLab is an independent audio development lab exploring the meeting point of music, software, and machine learning.</p>
+          <p>Music-making should be open to everyone: easy to begin, quick to explore, and rich in possibilities. We’re building a place to sketch, compose, arrange, and refine ideas directly in the browser, with minimal setup. AI agents support the creative process, while AI instruments bring static MIDI to life as vivid, expressive performances with a human touch.</p>
+          <p>Our vision is local by default and open by design: your creative work stays on your device, with tools and models anyone can understand, adapt, and build on.</p>
+          <div class="about-links"><a class="text-link" href="https://github.com/KGAudioLab" target="_blank" rel="noopener noreferrer">Find us on GitHub<svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg></a><a class="text-link" href="https://huggingface.co/KGAudioLab" target="_blank" rel="noopener noreferrer">Our work on Hugging Face<svg class="icon" aria-hidden="true"><use href="#arrow-up-right"/></svg></a></div>
+        </div>
+      </div>
+      <footer class="container footer"><a class="brand footer-brand" href="#home"><img src="./kgstudio/logo-kgaudiolab.png" width="28" height="28" alt=""><span>KGAudioLab<span class="brand-period">.</span></span></a><p>© <span id="year">2026</span> Xiaohan Tian · KGAudioLab</p><a class="back-top" href="#home">Back to top<svg class="icon" aria-hidden="true"><use href="#arrow-down"/></svg></a></footer>
+    </section>
+  </main>
 </body>
 </html>

@@ -1,0 +1,10 @@
+Hall impulse response
+
+"480L Halls 03 Medium Hall.wav" by Greg Hopkins, Hopkins Media Services,
+from the Original Hopkins IR Collection (2012).
+Source and Creative Commons Attribution license notice: https://hopkinsmedia.services/ir
+
+This demo uses KGStudio's prepared copy, which applies a 50 ms linear endpoint
+fade to the original stereo, 48 kHz, 24-bit PCM WAV. The author specifies
+Creative Commons Attribution (CC BY) and leaves its version unspecified.
+Prepared SHA-256: 88e7d23ecd9c279c0bae76c27e3775307c3cc82f2589200d9204527222ad7b17

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InstVELA M01Preview</title>
+  <script type="module" crossorigin src="/instvela/assets/app-CkAQU-5s.js"></script>
+  <link rel="modulepreload" crossorigin href="/instvela/assets/instvela-models-DJbS03oc.js">
+  <link rel="stylesheet" crossorigin href="/instvela/assets/app-DTGBOB3Q.css">
+</head>
+<body>
+<header>
+  <div class="header-content">
+    <div class="header-logo" aria-hidden="true"></div>
+    <div>
+      <h1>InstVELA M01Preview</h1>
+      <p class="muted">Render MIDI to audio locally in your browser.</p>
+    </div>
+    <div id="device" class="device" aria-live="polite"><span class="badge">starting…</span></div>
+    <div class="instrument-control">
+      <label for="instrument">Instrument</label>
+      <select id="instrument" disabled></select>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card" id="input-card">
+    <h2>MIDI file</h2>
+    <p id="midi-hint" class="monophony-hint muted">M01Preview renders one musical note at a time. Overlaps are shortened and chords keep their highest note.</p>
+    <div id="drop" class="drop">
+      <button id="pick" disabled class="drop-content" type="button" aria-labelledby="browse-midi" aria-describedby="drop-formats midi-hint">
+        <span class="drop-icon" aria-hidden="true">📁</span>
+        <span class="drop-label">Drag and drop a MIDI file here</span>
+        <span id="drop-formats" class="muted">.mid, .midi</span>
+        <span id="browse-midi" class="button primary">Browse files…</span>
+      </button>
+      <input id="file" type="file" accept=".mid,.midi,audio/midi" hidden>
+    </div>
+    <div id="file-info" class="muted"></div>
+  </section>
+
+  <section class="card" id="roll-card" hidden>
+    <div class="section-header row space">
+      <h2>Piano roll</h2>
+      <label class="zoom-control muted">Zoom <input id="zoom" type="range"></label>
+    </div>
+    <p class="monophony-hint muted">M01Preview renders one musical note at a time. Overlaps are shortened and chords keep their highest note. Drag a note up or down to change its pitch.</p>
+    <div class="legend" id="legend"></div>
+    <div id="roll-scroller" class="roll"><div id="roll-spacer"></div><canvas id="roll-canvas"></canvas></div>
+    <div id="roll-footer">
+      <button id="upload-own" class="button" type="button">Upload your own MIDI</button>
+    </div>
+  </section>
+
+  <section class="card" id="generate-card">
+    <h2>Generate</h2>
+    <div class="row">
+      <button id="generate" class="button primary" type="button" disabled>Generate</button>
+      <span id="status" class="muted" role="status">Loading demo configuration…</span>
+    </div>
+    <progress id="progress" max="1" value="0" aria-label="Generation progress"></progress>
+    <div id="stages" class="stages"></div>
+    <div id="render-output" hidden>
+      <audio id="player" controls></audio>
+      <div id="out-info" class="muted"></div>
+    </div>
+  </section>
+
+  <section class="card" id="settings-card">
+    <div class="section-header row space">
+      <h2>Settings</h2>
+      <button id="reset" disabled class="button small" type="button">Reset to defaults</button>
+    </div>
+    <form id="settings">
+      <div id="score-settings" class="settings-grid">
+        <div class="field">
+          <h3 class="field-heading">Keyswitches</h3>
+          <table class="keyswitch-table" aria-label="M01Preview keyswitches">
+            <thead><tr><th scope="col">Articulation</th><th scope="col">MIDI number</th><th scope="col">Note</th></tr></thead>
+            <tbody id="keyswitch-rows"></tbody>
+          </table>
+          <small>Notes start in sustain. Each keyswitch stays active until the next one.</small>
+        </div>
+      </div>
+      <details id="advanced-settings">
+        <summary>Advanced settings</summary>
+        <div class="expander-content"><div id="advanced-fields"></div></div>
+      </details>
+    </form>
+  </section>
+
+  <details class="card">
+    <summary>Log</summary>
+    <div class="expander-content"><pre id="log"></pre></div>
+  </details>
+</main>
+</body>
+</html>
